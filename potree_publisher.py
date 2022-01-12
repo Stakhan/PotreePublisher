@@ -24,8 +24,21 @@ def main(
     viewer_folder: str = typer.Option(cfg['viewer_folder'], help='Folder where the viewer html page will be stored.')
     ):  
     
-    
+    input_point_cloud = Path(input_point_cloud)
+
     typer.echo(f"Let's publish {input_point_cloud}!")
+
+    publish = Publisher(
+        potree_server_root,
+        point_cloud_folder,
+        viewer_folder
+    )
+
+    if input_point_cloud.is_file():
+        publish.single_file(input_point_cloud)
+    else:
+        raise NotImplementedError("Folder case coming soon.")
+
 
 if __name__ == "__main__":
     app()

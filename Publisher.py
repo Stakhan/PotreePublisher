@@ -4,7 +4,7 @@ from pathlib import Path
 
 class Publisher:
 
-    def __init__(self, input_path, potree_server_root, point_cloud_folder, viewer_folder):
+    def __init__(self, potree_server_root, point_cloud_folder, viewer_folder):
         self.check_folder(potree_server_root, point_cloud_folder)
         self.check_folder(potree_server_root, viewer_folder)
         

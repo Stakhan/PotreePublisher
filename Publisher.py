@@ -62,12 +62,15 @@ class Publisher:
         output_root = self.potree_server_root / self.point_cloud_folder / self.title
         output_root.mkdir()
 
-        for file_path in input_path.iterdir():
-            typer.echo(f"Converting {file_path.name} to Potree format...")
-            self.list_tiles.append(file_path.stem)
-            output_location = output_root / file_path.stem
-            output_location.mkdir()
-            self.launch_PotreeConverter(file_path, output_location, file_path.stem)
+
+        file_paths = [fp for fp in input_path.iterdir() if fp.is_file()] 
+        lenght = len(file_paths)
+        for i,file_path in enumerate(file_paths):
+                typer.echo(f"[{i}/{lenght}] Converting {file_path.name} to Potree format...")
+                self.list_tiles.append(file_path.stem)
+                output_location = output_root / file_path.stem
+                output_location.mkdir()
+                self.launch_PotreeConverter(file_path, output_location, file_path.stem)
         
         self.prepare_viewer_folder()
 

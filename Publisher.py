@@ -4,7 +4,7 @@ from pathlib import Path
 
 class Publisher:
 
-    def __init__(self, input_point_cloud, potree_server_root, point_cloud_folder, viewer_folder):
+    def __init__(self, input_path, potree_server_root, point_cloud_folder, viewer_folder):
         self.check_folder(potree_server_root, point_cloud_folder)
         self.check_folder(potree_server_root, viewer_folder)
         
@@ -18,31 +18,58 @@ class Publisher:
             typer.echo(f'Creating {plp.resolve()}')
             plp.mkdir(parents=True, exist_ok=True)
 
-    def single_file(self, input_point_cloud):
-        input_point_cloud = Path(input_point_cloud)
-        self.title = input_point_cloud.stem
-
-        typer.echo("Converting to Potree format...")
-        output_location = self.potree_server_root / self.point_cloud_folder / self.title
-        output_location.mkdir(exist_ok=True)
+    def launch_PotreeConverter(self, input_path, output_location, title):
         cmd = [ "/usr/local/bin/PotreeConverter",
                 "-i",
-                str( input_point_cloud.resolve() ),
+                str( input_path.resolve() ),
                 "-o",
                 str( output_location ),
                 "--title",
                 self.title]
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
-                            stderr=subprocess.PIPE)
+        process = subprocess.Popen(
+                    cmd,
+                    stdout=subprocess.PIPE, 
+                    stderr=subprocess.PIPE
+                    )
         stdout, stderr = process.communicate()
         if process.poll() != 0:
-            typer.echo(stderr)
             raise Exception(str(stderr))
-        else:
-            self.prepare_viewer_single_file()
+
+    def single_file(self, input_path):
+        """Publish a single file
+
+        Args:
+            input_path (pathlib.Path): path to file
+        """
+        self.title = input_path.stem
+
+        typer.echo("Converting to Potree format...")
+        output_location = self.potree_server_root / self.point_cloud_folder / self.title
+        output_location.mkdir(exist_ok=True)
         
-    def folder(self):
-        pass
+        self.launch_PotreeConverter(input_path, output_location, self.title)
+        
+        self.prepare_viewer_single_file()
+        
+    def folder(self, input_path):
+        """Publish a whole folder
+
+        Args:
+            input_path (pathlib.Path): path to folder
+        """
+        self.title = input_path.stem
+        self.list_tiles =[] 
+        output_root = self.potree_server_root / self.point_cloud_folder / self.title
+        output_root.mkdir()
+
+        for file_path in input_path.iterdir():
+            typer.echo(f"Converting {file_path.name} to Potree format...")
+            self.list_tiles.append(file_path.stem)
+            output_location = output_root / file_path.stem
+            output_location.mkdir()
+            self.launch_PotreeConverter(file_path, output_location, file_path.stem)
+        
+        self.prepare_viewer_folder()
 
     def prepare_viewer_single_file(self):
         
@@ -53,4 +80,11 @@ class Publisher:
                 fout.write(line)
 
     def prepare_viewer_folder(self):
-        pass
+
+        with open('viewer_templates/template_folder.html') as fin, open(self.potree_server_root / self.viewer_folder / (self.title+'.html'), 'w') as fout:
+            for line in fin:
+                if 'LIST-TILE-NAME-HERE' in line:
+                    line = line.replace('LIST-TILE-NAME-HERE', str(self.list_tiles))
+                if 'TITLE-HERE' in line:
+                    line = line.replace('TITLE-HERE', str(self.title))
+                fout.write(line)

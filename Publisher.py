@@ -24,7 +24,7 @@ class Publisher:
 
         typer.echo("Converting to Potree format...")
         output_location = self.potree_server_root / self.point_cloud_folder / self.title
-        output_location.mkdir()
+        output_location.mkdir(exist_ok=True)
         cmd = [ "/usr/local/bin/PotreeConverter",
                 "-i",
                 str( input_point_cloud.resolve() ),
@@ -37,19 +37,16 @@ class Publisher:
         stdout, stderr = process.communicate()
         if process.poll() != 0:
             typer.echo(stderr)
-            raise typer.Exit(code=1)
+            raise Exception(str(stderr))
+        else:
+            self.prepare_viewer_single_file()
         
-        
-            
-
-        
-
     def folder(self):
         pass
 
     def prepare_viewer_single_file(self):
         
-        with open('template_single_file.html') as fin, open(self.title+'.html', 'w') as fout:
+        with open('viewer_templates/template_single_file.html') as fin, open(self.potree_server_root / self.viewer_folder / (self.title+'.html'), 'w') as fout:
             for line in fin:
                 if 'TILE-NAME-HERE' in line:
                     line = line.replace('TILE-NAME-HERE', self.title)

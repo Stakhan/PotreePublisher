@@ -1,7 +1,9 @@
 import yaml
+import time
 import typer
 import subprocess
 from pathlib import Path
+from datetime import timedelta
 from Publisher import Publisher
 
 root_path = Path(__file__).parent.resolve()
@@ -23,7 +25,8 @@ def main(
     point_cloud_folder: str = typer.Option(cfg['point_cloud_folder'], help='Folder where the point cloud will be stored after conversion to Potree Format.'),
     viewer_folder: str = typer.Option(cfg['viewer_folder'], help='Folder where the viewer html page will be stored.')
     ):  
-    
+    start_time = time.time()
+
     input_path = Path(input_path)
 
     typer.echo(f"Let's publish {input_path}!")
@@ -39,6 +42,7 @@ def main(
     elif input_path.is_dir():
         publish.folder(input_path)
 
+    typer.echo(f"----- Execution time: {timedelta(seconds=time.time()-start_time)}")
 
 if __name__ == "__main__":
     app()

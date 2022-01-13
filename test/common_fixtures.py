@@ -1,5 +1,6 @@
 import laspy
 import pytest
+import shutil
 import numpy as np
 from pathlib import Path
 
@@ -36,4 +37,29 @@ def random_las():
 
     test_las.close()
 
-    return Path(filename)
+    yield Path(filename)
+
+    shutil.rmtree(filename, ignore_errors=True)
+
+
+@pytest.fixture
+def folder_random_las(random_las):
+    """Generates a folder containing several copies of a random LAS file.
+
+    Args:
+        random_las (pytest.fixture): the `common_fixtures.random_las`  fixture
+
+    Returns:
+        pathlib.Path: path to the generated folder
+    """
+    random_folder = random_las.parent / 'random_folder'
+    random_folder.mkdir(exist_ok=True)
+    for i in range(3):
+        shutil.copy(random_las, random_folder / f'random_{i}.las')
+        lasfile = laspy.file.File(random_folder / f'random_{i}.las', mode='rw')
+        lasfile.X += i*5000
+        lasfile.close()
+    
+    yield random_folder
+
+    shutil.rmtree(random_folder, ignore_errors=True)

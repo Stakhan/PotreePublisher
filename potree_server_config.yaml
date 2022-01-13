@@ -1,3 +1,4 @@
 root: /var/www/potree
 point_cloud_folder: pointclouds
-viewer_folder: results  
+viewer_folder: results 
+server_url: http://ubuntu-ai.eewwem.int

@@ -5,7 +5,7 @@ import pytest
 import shutil
 import numpy as np
 from pathlib import Path
-from common_fixtures import random_las
+from common_fixtures import random_las, folder_random_las
 
 root_path = Path(__file__).parent.resolve()
 
@@ -18,29 +18,11 @@ cfg = yaml.full_load(open(root_path.parent / 'potree_server_config.yaml'))
 @pytest.fixture
 def publisher_obj():
     return Publisher(
-        '/dummy/path/to/file.las',
         cfg['root'],
         cfg['point_cloud_folder'],
         cfg['viewer_folder'])
 
-@pytest.fixture
-def folder_random_las(random_las):
-    """Generates a folder containing several copies of a random LAS file.
 
-    Args:
-        random_las (pytest.fixture): the `common_fixtures.random_las`  fixture
-
-    Returns:
-        pathlib.Path: path to the generated folder
-    """
-    random_folder = random_las.parent / 'random_folder'
-    random_folder.mkdir(exist_ok=True)
-    for i in range(3):
-        shutil.copy(random_las, random_folder / f'random_{i}.las')
-        lasfile = laspy.file.File(random_folder / f'random_{i}.las', mode='rw')
-        lasfile.X += i*5000
-        lasfile.close()
-    return random_folder
 
 def test_check_folder(tmp_path, publisher_obj):
    # Creating directory to make sure it exists beforehand 
@@ -72,12 +54,36 @@ def test_single_file(publisher_obj, random_las):
     assert (pc_location / "octree.bin").exists()
     assert (pc_location / "hierarchy.bin").exists()
 
+   # Teardown 
+    shutil.rmtree(pc_location, ignore_errors=True)
+
+def test_single_file_fail(publisher_obj):
+    non_existing_las = Path('/made/up/path/to/unknown.las')
+    
+    with pytest.raises(SystemError) as excinfo:
+        publisher_obj.single_file(non_existing_las)
+ 
+def test_prepare_viewer_single_file(publisher_obj):
+    pass
+
 def test_folder(publisher_obj, folder_random_las):
+    print(folder_random_las)
+    publisher_obj.folder(folder_random_las)
+
+    point_cloud_location = publisher_obj.potree_server_root / publisher_obj.point_cloud_folder / folder_random_las.stem
+    point_cloud_subfolders = [subf for subf in point_cloud_location.iterdir() if subf.is_dir()]
+
+    for pc_subf in point_cloud_subfolders:
+        assert (pc_subf / "metadata.json").exists()
+        assert (pc_subf / "octree.bin").exists()
+        assert (pc_subf / "hierarchy.bin").exists()
+
+    # Teardown 
+    shutil.rmtree(point_cloud_location, ignore_errors=True)
+
+def test_prepare_viewer_folder(publisher_obj, folder_random_las):
     
     publisher_obj.folder(folder_random_las)
 
-    viewer_location = publisher_obj.potree_server_root / publisher_obj.point_cloud_folder / folder_random_las.stem
-    viewer_files = [f.stem for f in viewer_location.iterdir()] 
-    
-    for random_las in folder_random_las.iterdir():
-        assert random_las.stem in viewer_files
+    viewer_file = publisher_obj.potree_server_root / publisher_obj.viewer_folder / (folder_random_las.stem+'.html')
+    assert viewer_file.exists()

@@ -33,7 +33,7 @@ class Publisher:
                     )
         stdout, stderr = process.communicate()
         if process.poll() != 0:
-            raise Exception(str(stderr))
+            raise SystemError(str(stderr))
 
     def single_file(self, input_path):
         """Publish a single file
@@ -60,17 +60,22 @@ class Publisher:
         self.title = input_path.stem
         self.list_tiles =[] 
         output_root = self.potree_server_root / self.point_cloud_folder / self.title
-        output_root.mkdir()
+        output_root.mkdir(exist_ok=True)
 
 
         file_paths = [fp for fp in input_path.iterdir() if fp.is_file()] 
         lenght = len(file_paths)
         for i,file_path in enumerate(file_paths):
-                typer.echo(f"[{i+1}/{lenght}] Converting {file_path.name} to Potree format...")
+                
                 self.list_tiles.append(file_path.stem)
                 output_location = output_root / file_path.stem
-                output_location.mkdir()
-                self.launch_PotreeConverter(file_path, output_location, file_path.stem)
+                if output_location.exists() and all([ (output_location/f).exists() for f in ["metadata.json", "hierarchy.bin", "octree.bin"] ]):
+                    typer.echo(f"[{i+1}/{lenght}] File {file_path.name} already prepared. Skipping.")
+                    continue
+                else:
+                    typer.echo(f"[{i+1}/{lenght}] Converting {file_path.name} to Potree format...")
+                    output_location.mkdir()
+                    self.launch_PotreeConverter(file_path, output_location, file_path.stem)
         
         self.prepare_viewer_folder()
 

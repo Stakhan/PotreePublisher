@@ -66,7 +66,7 @@ class Publisher:
         file_paths = [fp for fp in input_path.iterdir() if fp.is_file()] 
         lenght = len(file_paths)
         for i,file_path in enumerate(file_paths):
-                typer.echo(f"[{i}/{lenght}] Converting {file_path.name} to Potree format...")
+                typer.echo(f"[{i+1}/{lenght}] Converting {file_path.name} to Potree format...")
                 self.list_tiles.append(file_path.stem)
                 output_location = output_root / file_path.stem
                 output_location.mkdir()

@@ -1,11 +1,11 @@
 # PotreePublisher
 Small CLI to quickly publish a single LAS file or a whole folder to a Potree server.
 ```
-Usage: PotreePublisher [OPTIONS] INPUT_POINT_CLOUD
+Usage: PotreePublisher [OPTIONS] INPUT_PATH
 
 Arguments:
-  INPUT_POINT_CLOUD  Path to the point cloud to process. Any type supported by
-                     PotreeConverter is possible.  [required]
+  INPUT_PATH  Path to the point cloud or a folder of point clouds to process.
+              Any type supported by PotreeConverter is possible.  [required]
 
 Options:
   --potree-server-root TEXT  Root path of the potree server.  [default:

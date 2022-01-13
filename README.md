@@ -17,3 +17,6 @@ Options:
                              [default: results]
   --help                     Show this message and exit.
 ```
+## Installation
+Installation instructions coming soon!
+

@@ -6,8 +6,11 @@ Small CLI to quickly publish a single LAS file or a whole folder to a Potree ser
 It is assumed that you have a potree server installed somewhere.
 <details>
 <summary>Here are some detailed instructions if you don't ;)</summary>
+
 1. Clone the potree repository: `git clone https://github.com/potree/potree`
+
 2. Make sure you have the Node Package Manager (npm) installed (usually delivered with node.js).
+
 3. Inside potree's repository, run `npm install`. It will install dependencies (specified in package.json) and create a build in ./build/potree.
 4. Move the potree folder to you favorite http server.
 5. Make sure you spot the location where you want to:

@@ -1,5 +1,12 @@
 # PotreePublisher
 Small CLI to quickly publish a single LAS file or a whole folder to a Potree server.
+
+## Installation
+```
+pip install potreepublisher
+```
+
+## Usage
 ```
 Usage: PotreePublisher [OPTIONS] INPUT_PATH
 
@@ -17,6 +24,3 @@ Options:
                              [default: results]
   --help                     Show this message and exit.
 ```
-## Installation
-Installation instructions coming soon!
-

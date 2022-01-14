@@ -63,3 +63,4 @@ def folder_random_las(random_las):
     yield random_folder
 
     shutil.rmtree(random_folder, ignore_errors=True)
+

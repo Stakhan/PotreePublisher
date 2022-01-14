@@ -4,7 +4,7 @@ import typer
 import subprocess
 from pathlib import Path
 from datetime import timedelta
-from Publisher import Publisher
+from .Publisher import Publisher
 
 root_path = Path(__file__).parent.resolve()
 
@@ -45,6 +45,3 @@ def main(
     typer.echo(f"Result published at: {cfg['server_url']}/{viewer_folder}/{publish.title}.html")
 
     typer.echo(f"----- Execution time: {timedelta(seconds=time.time()-start_time)}")
-
-if __name__ == "__main__":
-    app()

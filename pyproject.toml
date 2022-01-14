@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "PotreePublisher"
+version = "0.1.0"
+description = "Small CLI to quickly publish a single LAS file or a whole folder to a Potree server."
+authors = ["Elie-Alban LESCOUT <elie-alban.lescout@ensg.eu>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+PotreePublisher = "potreepublisher.main:app"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+typer = {extras = ["all"], version = "^0.4.0"}
+PyYAML = "^6.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

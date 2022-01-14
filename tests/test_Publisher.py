@@ -63,8 +63,9 @@ def test_single_file_fail(publisher_obj):
     with pytest.raises(SystemError) as excinfo:
         publisher_obj.single_file(non_existing_las)
  
-def test_prepare_viewer_single_file(publisher_obj):
-    pass
+    # Teardown 
+    shutil.rmtree(Path(cfg['root']) / cfg['point_cloud_folder'] / non_existing_las.stem, ignore_errors=True)
+
 
 def test_folder(publisher_obj, folder_random_las):
     print(folder_random_las)
@@ -78,7 +79,7 @@ def test_folder(publisher_obj, folder_random_las):
         assert (pc_subf / "octree.bin").exists()
         assert (pc_subf / "hierarchy.bin").exists()
 
-    # Teardown 
+    # Teardown
     shutil.rmtree(point_cloud_location, ignore_errors=True)
 
 def test_prepare_viewer_folder(publisher_obj, folder_random_las):
@@ -87,3 +88,6 @@ def test_prepare_viewer_folder(publisher_obj, folder_random_las):
 
     viewer_file = publisher_obj.potree_server_root / publisher_obj.viewer_folder / (folder_random_las.stem+'.html')
     assert viewer_file.exists()
+
+   # Teardown
+    shutil.rmtree(viewer_file, ignore_errors=True) 

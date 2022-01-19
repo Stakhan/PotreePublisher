@@ -2,6 +2,8 @@ import typer
 import subprocess
 from pathlib import Path
 
+root_path = Path(__file__).parent.resolve()
+
 class Publisher:
 
     def __init__(self, potree_server_root, point_cloud_folder, viewer_folder):
@@ -81,7 +83,7 @@ class Publisher:
 
     def prepare_viewer_single_file(self):
         
-        with open('viewer_templates/template_single_file.html') as fin, open(self.potree_server_root / self.viewer_folder / (self.title+'.html'), 'w') as fout:
+        with open(root_path / 'viewer_templates/template_single_file.html') as fin, open(self.potree_server_root / self.viewer_folder / (self.title+'.html'), 'w') as fout:
             for line in fin:
                 if 'TILE-NAME-HERE' in line:
                     line = line.replace('TILE-NAME-HERE', self.title)
@@ -89,7 +91,7 @@ class Publisher:
 
     def prepare_viewer_folder(self):
 
-        with open('viewer_templates/template_folder.html') as fin, open(self.potree_server_root / self.viewer_folder / (self.title+'.html'), 'w') as fout:
+        with open(root_path / 'viewer_templates/template_folder.html') as fin, open(self.potree_server_root / self.viewer_folder / (self.title+'.html'), 'w') as fout:
             for line in fin:
                 if 'LIST-TILE-NAME-HERE' in line:
                     line = line.replace('LIST-TILE-NAME-HERE', str(self.list_tiles))

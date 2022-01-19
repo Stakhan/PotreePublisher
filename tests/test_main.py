@@ -5,13 +5,13 @@ import pytest
 import shutil
 import numpy as np
 from pathlib import Path
-from common_fixtures import random_las, folder_random_las
+from .common_fixtures import random_las, folder_random_las
 from typer.testing import CliRunner
 
 root_path = Path(__file__).parent.resolve()
 
 sys.path.insert(0, str(root_path.parent))
-from potree_publisher import app
+from PotreePublisher/potreepublisher import app
 
 cfg = yaml.full_load(open(root_path.parent / 'potree_server_config.yaml'))
 

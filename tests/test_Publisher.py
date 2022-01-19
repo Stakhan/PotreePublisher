@@ -5,7 +5,7 @@ import pytest
 import shutil
 import numpy as np
 from pathlib import Path
-from common_fixtures import random_las, folder_random_las
+from .common_fixtures import random_las, folder_random_las
 
 root_path = Path(__file__).parent.resolve()
 

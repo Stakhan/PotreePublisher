@@ -3,7 +3,7 @@ Small CLI to quickly publish a single LAS file or a whole folder to a Potree ser
 
 
 ## Prerequisites
-It is assumed that you have a potree server installed somewhere.
+It is assumed that you have a **Potree server** installed on your machine.
 <details>
 <summary>Expand for instructions if you don't :wink:</summary>
 
@@ -21,6 +21,8 @@ It is assumed that you have a potree server installed somewhere.
 
 6. You're good to go! 
 </details>
+
+It is also assumed that you have **PotreeConverter** installed. See [this page](https://github.com/potree/PotreeConverter) for instructions.
 
 ## Installation
 ```

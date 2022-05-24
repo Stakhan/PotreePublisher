@@ -11,7 +11,7 @@ from typer.testing import CliRunner
 root_path = Path(__file__).parent.resolve()
 
 sys.path.insert(0, str(root_path.parent))
-from PotreePublisher/potreepublisher import app
+from PotreePublisher.potreepublisher import app
 
 cfg = yaml.full_load(open(root_path.parent / 'potree_server_config.yaml'))
 

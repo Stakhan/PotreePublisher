@@ -21,10 +21,13 @@ app = typer.Typer()
 @app.command()
 def main(
     input_path: str = typer.Argument(..., help="Path to the point cloud or a folder of point clouds to process. Any type supported by PotreeConverter is possible.", callback=check_path_callback),
-    potree_server_root: str = typer.Option(cfg['root'], help='Root path of the potree server.', callback=check_path_callback),
-    point_cloud_folder: str = typer.Option(cfg['point_cloud_folder'], help='Folder where the point cloud will be stored after conversion to Potree Format.'),
-    viewer_folder: str = typer.Option(cfg['viewer_folder'], help='Folder where the viewer html page will be stored.')
-    ):  
+    potree_server_root: str = typer.Option(cfg['root'], help=f"Root path of the potree server.\n\nDefault values can be changed in {Path(__file__).parent/'potree_server_config.yaml'}.\n", callback=check_path_callback),
+    point_cloud_folder: str = typer.Option(cfg['point_cloud_folder'], help=f"Folder where the point cloud will be stored after conversion to Potree Format.\n\nDefault value can be changed in config file (see `--potree-server-root` option).\n"),
+    viewer_folder: str = typer.Option(cfg['viewer_folder'], help=f"Folder where the viewer html page will be stored.\n\nDefault value can be changed in config file (see `--potree-server-root` option).\n")
+    ):
+    """
+    Quickly publish a single LAS file or a whole folder to a Potree server.
+    """
     start_time = time.time()
 
     input_path = Path(input_path)

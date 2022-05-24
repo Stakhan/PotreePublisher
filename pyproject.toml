@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PotreePublisher"
-version = "0.1.1"
+version = "0.1.5"
 description = "Small CLI to quickly publish a single LAS file or a whole folder to a Potree server."
 authors = ["Elie-Alban LESCOUT <elie-alban.lescout@ensg.eu>"]
 readme = "README.md"

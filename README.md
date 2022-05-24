@@ -47,3 +47,4 @@ Options:
                              [default: results]
   --help                     Show this message and exit.
 ```
+You can change the default values permanently by modifying the [`potree_server_config.yaml`](potreepublisher/potree_server_config.yaml)
